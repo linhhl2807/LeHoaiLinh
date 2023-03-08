@@ -103,6 +103,9 @@ ALTER LOGIN NhanVien DISABLE;
 --CÂU 2
 --T1
 backup database AdventureWorks2008R2 to disk = 'd:\bk\Adven.bak'
+--T2
+UPDATE Production.Product
+SET SafetyStockLevel = SafetyStockLevel * 1.1;
 --T3
 backup database AdventureWorks2008R2 to disk = 'd\sql\Adven_Diff.bak' with differential
 --T4
@@ -115,3 +118,5 @@ VALUES
 backup log AdventureWorks2008R2 to disk = 'D:\sql\Adven.trn'
 --T8
 DROP DATABASE AdventureWorks2008R2;
+--T9
+restore log AdventureWorks2008R2 from disk = 'D:\sql\Adven.trn'

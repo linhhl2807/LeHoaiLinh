@@ -101,13 +101,17 @@ GO
 ALTER LOGIN TruongNhom DISABLE;
 ALTER LOGIN NhanVien DISABLE;
 --CÂU 2
---1. Restore full backup (T1) dùng lệnh 
-RESTORE DATABASE AdventureWorks2008R2 FROM DISK = 'path_to_full_backup' WITH NORECOVERY;
---2. Apply differential backup 2 (T5) dùng lệnh 
-RESTORE DATABASE AdventureWorks2008R2 FROM DISK = 'path_to_diff_backup_2' WITH NORECOVERY;
---3. Apply log backup (T7) dùng lệnh 
-RESTORE LOG AdventureWorks2008R2 FROM DISK = 'path_to_log_backup' WITH NORECOVERY;
---4. Kiểm tra xem DB phục hồi có ở trạng thái T7 không (Tới trạng thái trước khi xóa DB) 
-
---Nếu muốn phục hồi đến thời điểm T7, ta sử dụng lệnh  STOPAT 'T7' trong lệnh RESTORE LOG.
---Nếu muốn phục hồi đến thời điểm T9, ta sử dụng lệnh  RECOVERY thay vì WITH NORECOVERY ở bước 3.
+--T1
+backup database AdventureWorks2008R2 to disk = 'd:\bk\Adven.bak'
+--T3
+backup database AdventureWorks2008R2 to disk = 'd\sql\Adven_Diff.bak' with differential
+--T4
+truncate table Person.Emailaddress;
+--T6
+INSERT INTO Person.ContactType(ContactTypeID,Name, ModifiedDate)
+VALUES
+    (14, 'Linh', '2002-07-28');
+--T7
+backup log AdventureWorks2008R2 to disk = 'D:\sql\Adven.trn'
+--T8
+DROP DATABASE AdventureWorks2008R2;
